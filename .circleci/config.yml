@@ -51,7 +51,7 @@ jobs:
              cd build
              zip ../build.zip -r * .[^.]*
              echo "Build successful" 
-      -run: 
+      - run: 
         name: Deploy to AWS S3 
         command: |
           if ["${CURRENT_BRANCH}" == "master"]
