@@ -14,7 +14,7 @@ jobs:
               -app-{{ checksum "package.json" }}    
               -app-
         - run: 
-            name: Install dependencies
+            name: Install dependency
             command: npm install       
         - save_cache:
             paths: 
