@@ -11,10 +11,10 @@ jobs:
             command: echo ${CIRCLE_BRANCH}
         - restore_cache:
             keys: 
-              -app-{{ checksum "package.json" }}    
-              -app-
+              - app-{{ checksum "package.json" }}    
+              - app-
         - run: 
-            name: Install dependency
+            name: Install dependencies
             command: npm install       
         - save_cache:
             paths: 
