@@ -4,7 +4,6 @@ executors:
     docker:
       - image: circleci/node:13.12.0
     working_directory: ~/repo
-
 aliases:
   - &show-current-branch-name
     run:
@@ -46,24 +45,11 @@ jobs:
     executor: app-executor
     steps:
       - checkout
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      - restore_cache:
-          keys:
-            - app-{{ checksum "package.json" }}
-            - app-
-      - run:
-          name: Install dependencies
-          command: npm install
-      - save_cache:
-          paths:
-            - node_modules
-          key: app-{{ checksum "package.json" }}
       - *show-current-branch-name
       - *restore-cache
       - *install-dependencies
       - *save-cache
+
   linting:
     executor: app-executor
     steps:
@@ -72,33 +58,12 @@ jobs:
       - *restore-cache
       - run:
           name: Run linting
-          command: npm run lint      
+          command: npm run lint
 
   deploy-to-aws-s3:
-    docker:
-      - image: circleci/node:13.12.0
-    working_directory: ~/repo
     executor: app-executor
     steps:
       - checkout
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      - run:
-          name: Installing AWS CLI
-          working_directory: /
-          command: |
-            sudo apt-get -y -qq update
-            sudo apt-get install -y awscli
-            sudo apt-get install -y python-pip python-dev build-essential
-      - run:
-          name: Build Project
-          command: |
-            npm install
-            npm run build
-            cd build
-            zip ../build.zip -r * .[^.]*
-            echo "Build successful"
       - *show-current-branch-name
       - *install-aws-cli
       - *build-project
@@ -112,33 +77,12 @@ jobs:
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_STAGING} --delete
             else
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_DEV} --delete
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_DEV_BUCKET} --delete
             fi
   deploy-to-aws-cloudfront:
-    docker:
-      - image: circleci/node:13.12.0
-    working_directory: ~/repo
     executor: app-executor
     steps:
       - checkout
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      - run:
-          name: Installing AWS CLI
-          working_directory: /
-          command: |
-            sudo apt-get -y -qq update
-            sudo apt-get install -y awscli
-            sudo apt-get install -y python-pip python-dev build-essential
-      - run:
-          name: Build Project
-          command: |
-            npm install
-            npm run build
-            cd build
-            zip ../build.zip -r * .[^.]*
-            echo "Build successful"
       - *show-current-branch-name
       - *install-aws-cli
       - *build-project
@@ -165,25 +109,24 @@ workflows:
           filters:
             branches:
               only:
-                - developer
+                - develop
                 - staging
                 - master
       - deploy-to-aws-s3:
-        requires:
-          - linting
-        filters:
-          branches:
-            only:
-              - develop
-              - staging
-              - master          
+          requires:
+            - linting
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
       - deploy-to-aws-cloudfront:
           requires:
             - deploy-to-aws-s3
           filters:
             branches:
               only:
-                - developer
+                - develop
                 - staging
                 - master
-              
