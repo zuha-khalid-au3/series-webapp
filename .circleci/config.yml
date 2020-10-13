@@ -121,7 +121,7 @@ workflows:
                 - developer
                 - staging
                 - master
-       - prettier:
+      - prettier:
           requires:
             - linting
           filters:
