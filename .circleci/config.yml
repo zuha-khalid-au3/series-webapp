@@ -5,25 +5,25 @@ executor:
       - image: 'circleci/node:13.12.0'
     working_directory: ~/repo
 aliases:
-  - &ref_0
+  - &show-current-branch-name
     run:
       name: Show current branch
       command: 'echo ${CIRCLE_BRANCH}'
-  - &ref_1
+  - &restore-cache
     restore_cache:
       keys:
         - 'app-{{ checksum "package.json" }}'
         - app-
-  - &ref_2
+  - &install-dependencies
     run:
       name: Install dependencies
       command: npm install
-  - &ref_3
+  - &save-cache
     save_cache:
       paths:
         - node_modules
       key: 'app-{{ checksum "package.json" }}'
-  - &ref_4
+  - &install-aws-cli
     run:
       name: Installing AWS CLI
       working_directory: /
@@ -31,7 +31,7 @@ aliases:
         sudo apt-get -y -qq update
         sudo apt-get install -y awscli
         sudo apt-get install -y python-pip python-dev build-essential  
-  - &ref_5
+  - &build-project
     run:
       name: Build Project
       command: |
@@ -45,17 +45,17 @@ jobs:
     executor: app-executor
     steps:
       - checkout
-      - *ref_0
-      - *ref_1
-      - *ref_2
-      - *ref_3
+      - *show-current-branch-name
+      - *restore-cache
+      - *install-dependencies
+      - *save-cache
   deploy-to-aws-s3:
     executor: app-executor
     steps:
       - checkout
-      - *ref_0
-      - *ref_4
-      - *ref_5
+      - *show-current-branch-name
+      - *install-aws-cli
+      - *build-project
       - run:
           name: Deploy to AWS S3
           command: |
