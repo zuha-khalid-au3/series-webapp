@@ -103,7 +103,7 @@ jobs:
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_STAGING} --delete
             else
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_DEV_BUCKET} --delete
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_DEV} --delete
             fi
   deploy-to-aws-cloudfront:
     docker:
@@ -156,7 +156,7 @@ workflows:
           filters:
             branches:
               only:
-                - develop
+                - developer
                 - staging
                 - master
       - deploy-to-aws-cloudfront:
@@ -165,7 +165,7 @@ workflows:
           filters:
             branches:
               only:
-                - develop
+                - developer
                 - staging
                 - master
               
