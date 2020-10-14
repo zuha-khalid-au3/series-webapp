@@ -67,7 +67,7 @@ jobs:
       - run:
           name: Run linting
           command: npm run lint
-          
+
   prettier:
     executor: app-executor
     steps:
@@ -122,8 +122,8 @@ jobs:
     executor: slack-executor  
     steps:
       - slack/notify:
-        message: "${CIRCLE_BRANCH} branch deployment to aws s3 and cloudfront is complete."        
-        webhook: $CIRCLECI_SLACK_WEBHOOK
+          message: "${CIRCLE_BRANCH} branch deployment to aws s3 and cloudfront is complete."        
+          webhook: $CIRCLECI_SLACK_WEBHOOK
       - slack/status:
           webhook: $CIRCLECI_SLACK_WEBHOOK  
 workflows:
