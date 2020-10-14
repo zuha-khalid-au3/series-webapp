@@ -10,7 +10,7 @@ executors:
     docker:
       - image: 'cibuilds/base:latest' 
     resource_class: small  
-    
+
   aliases:
     - &show-current-branch-name
       run:
@@ -47,6 +47,7 @@ executors:
           cd build
           zip ../build.zip -r * .[^.]*
           echo "Build successful"
+
 jobs:
   build:
     executor: app-executor
@@ -66,6 +67,7 @@ jobs:
       - run:
           name: Run linting
           command: npm run lint
+          
   prettier:
     executor: app-executor
     steps:
