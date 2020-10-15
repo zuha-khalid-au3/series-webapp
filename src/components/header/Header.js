@@ -1,9 +1,7 @@
 /* eslint-disable no-const-assign */
 import React, { useState } from 'react';
 // import logo from '../../logo.svg';
-
 import './Header.scss';
-
 const HEADER_LIST = [
   {
     id: 1,
@@ -85,13 +83,9 @@ const Header = () => {
           </ul>
 
         </div>
-
-      
       </div>
     </>
   );
 };
 
 export default Header;
-
-
