@@ -3,7 +3,7 @@ import MainContent from '../content/main-content/MainContent';
 const Main = () => {
   return (
     <div className="main">
-      <MainContent/>
+      <MainContent />
     </div>
   );
 };
