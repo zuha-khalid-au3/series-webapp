@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Slideshow.scss';
-export const SlideShow = (props) => {
+const SlideShow = (props) => {
   const { images, auto, showArrows } = props;
   const [slide, setSlide] = useState({
     slideShow: images[0],
@@ -109,4 +111,4 @@ Slideshow.propTypes = {
   currentSlide: PropTypes.number
 };
 
-export default SlideShow;
+export default Slideshow;
